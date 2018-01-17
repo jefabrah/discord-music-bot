@@ -152,6 +152,7 @@ function playMusic(id, message) {
                 guilds[message.guild.id].que = [];
                 guilds[message.guild.id].queNames = [];
                 guilds[message.guild.id].isPlaying = false;
+                connectionTimeout(message);
             } else {
                 setTimeout(function () {
                     playMusic(guilds[message.guild.id].que[0], message);
@@ -191,4 +192,12 @@ function search_video(query, callback) {
 
 function isYoutube(str) {
     return str.toLowerCase().indexOf("youtube.com") > -1;
+}
+
+function connectionTimeout (message) {
+    setTimeout(() => {
+        if (!guilds[message.guild.id].isPlaying) {
+            guilds[message.guild.id].voiceChannel.leave();
+        }
+    }, 120000);
 }
