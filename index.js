@@ -64,7 +64,11 @@ client.on('message', function (message) {
     } else if (mess.startsWith(prefix + "skip")) {
         message.reply('Skipping ' + `**${guilds[message.guild.id].queNames[0]}**`);
         skip_song(message);
-        
+    } else if (mess.startsWith(prefix + "leave")) {
+        guilds[message.guild.id].que = [];
+        guilds[message.guild.id].queNames = [];
+        guilds[message.guild.id].isPlaying = false;
+        guilds[message.guild.id].voiceChannel.leave();
     } else if (mess.startsWith(prefix + "que")) {
         var message2 = "```";
         for (var i = 0; i < guilds[message.guild.id].queNames.length; i++) {
@@ -81,9 +85,16 @@ client.on('message', function (message) {
         message.channel.send(message2);
     }
     else if (mess.startsWith(prefix + "create playlist")) {
-        const playlistName = mess.replace('~create playlist ', '');
+        const playlistName = mess.replace(prefix + 'create playlist ', '');
         console.log('creating playlist ' + playlistName);
-        message.reply('creating playlist ' + playlistName);
+        db.savePlaylist({ name: playlistName }).then(() => {
+            console.log('Created playlist ' + playlistName);
+            message.channel.send('Created playlist ' + playlistName);
+        })
+        .catch((err) => {
+            console.error('Failed to created playlist ' + playlistName);
+            message.channel.send('Created playlist ' + playlistName);
+        });
     }
     else if (mess.startsWith(prefix + "start playlist")) {
         const playlistName = message.content.replace(prefix + 'start playlist ', '').trim();
@@ -94,6 +105,7 @@ client.on('message', function (message) {
         db.getPlaylistByName(playlistName).then((playlistData) => {
             let songIndex = 0;
             let firstSongId = null;
+            let firstSongStarted = false;
             function fetchSongs() {
                 const song = playlistData.songs[songIndex]
                 getID(song, function (id) {
@@ -103,19 +115,19 @@ client.on('message', function (message) {
                         if (err) throw new Error(err);
                         message.reply(" added to que: **" + videoInfo.title + "**");
                         guilds[message.guild.id].queNames.push(videoInfo.title);
-                        if (songIndex === playlistData.songs.length - 1) {
-                            playMusic(firstSongId, message);
-                            return;
+                        if (firstSongId && !firstSongStarted) {
+                             playMusic(firstSongId, message);
+                            firstSongStarted = true;
+                        }
+                        if (songIndex < playlistData.songs.length - 1) {
+                            fetchSongs();
                         }
                         songIndex++;
-                        fetchSongs();
                     });
                 });
 
             }
-
             fetchSongs();
-
         })
             .catch((err) => {
                 console.error('Error getting playlist');
@@ -194,7 +206,7 @@ function isYoutube(str) {
     return str.toLowerCase().indexOf("youtube.com") > -1;
 }
 
-function connectionTimeout (message) {
+function connectionTimeout(message) {
     setTimeout(() => {
         if (!guilds[message.guild.id].isPlaying) {
             guilds[message.guild.id].voiceChannel.leave();
