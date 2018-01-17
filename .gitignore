@@ -1,0 +1,5 @@
+*node_modules
+settings.json
+playlistsDB.json
+launch.json
+*.DS_Store
