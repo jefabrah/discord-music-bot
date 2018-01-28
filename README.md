@@ -20,7 +20,7 @@
 
 3.	create a `settings.json` file with the following in the main directory:
 
-	```json
+	```js
 	{
 	  "yt_api_key": "youtube_api_key", // your youtube api key here
 	  "discord_token": "discord_bot_token", // your discord bot token here
