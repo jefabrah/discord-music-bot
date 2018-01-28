@@ -22,9 +22,9 @@
 
 	```json
 	{
-	  "yt_api_key": "youtube_api_key", /* your youtube api key here */
-	  "discord_token": "discord_bot_token", /* your discord bot token here */
-	  "prefix": "~" /* the prefix you want for your server */
+	  "yt_api_key": "youtube_api_key", // your youtube api key here
+	  "discord_token": "discord_bot_token", // your discord bot token here
+	  "prefix": "~" // the prefix you want for your server
 	}
 	```
 
