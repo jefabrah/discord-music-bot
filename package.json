@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Jeffrey Abraham",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.3.0",
@@ -19,5 +19,14 @@
     "request": "^2.83.0",
     "youtube-info": "^1.1.2",
     "ytdl-core": "^0.14.4"
+  },
+  "devDependencies": {
+    "@types/core-js": "0.9.46",
+    "@types/node": "9.4.0",
+    "awesome-typescript-loader": "3.4.1",
+    "json-loader": "0.5.7",
+    "source-map-loader": "0.2.3",
+    "typescript": "2.6.2",
+    "webpack-node-externals": "1.6.0"
   }
 }
