@@ -27,7 +27,6 @@ export class Music {
   playMusic = (id: string, message: Message) => {
     this.guild.voiceChannel = message.member.voiceChannel;
     this.guild.voiceChannel.join().then((connection) => {
-      console.log(this);
       const stream = this.youtube.ytdl("https://www.youtube.com/watch?v=" + id, {
         filter: 'audioonly'
       });
@@ -38,7 +37,7 @@ export class Music {
         this.guild.queue.shift();
         this.guild.queueNames.shift();
         if (this.guild.queue.length === 0) {
-          console.log('No more music in queue. Starting timeout');
+          console.log('No more music in queue. Starting connection timeout');
           this.guild.queue = [];
           this.guild.queueNames = [];
           this.guild.isPlaying = false;
@@ -51,7 +50,7 @@ export class Music {
       });
     })
       .catch(err => {
-        console.error('error joining voice channel:', err);
+        console.error('error joining voice channel and starting stream:', err);
       });
   }
 
